@@ -3,7 +3,13 @@ from __future__ import annotations
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 
-from app.render import render_api_summary, render_overview, render_policy_queue, render_tool_matrix
+from app.render import (
+    render_api_summary,
+    render_audit_summary,
+    render_overview,
+    render_policy_queue,
+    render_tool_matrix,
+)
 from app.services.policy_service import build_service
 
 app = FastAPI(
@@ -31,6 +37,11 @@ def policies() -> str:
 @app.get("/tool-matrix", response_class=HTMLResponse)
 def tool_matrix() -> str:
     return render_tool_matrix()
+
+
+@app.get("/audit", response_class=HTMLResponse)
+def audit() -> str:
+    return render_audit_summary()
 
 
 @app.get("/api-summary", response_class=HTMLResponse)

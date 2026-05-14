@@ -48,21 +48,28 @@
   <text x='1415' y='39' fill='#ffffff' text-anchor='middle' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='3'>OPEN API DOCS</text>
   <rect x='294' y='104' width='1240' height='248' rx='28' fill='url(#hero)' stroke='rgba(120,163,214,0.18)'/>
   <text x='332' y='146' fill='#6ec5ff' font-size='11' font-family='Segoe UI' letter-spacing='5'>MCP POLICY LAB</text>
-  <text x='332' y='212' fill='#f6f8fe' font-size='44' font-family='Georgia' font-weight='700'>Review queue for destructive-action exposure.</text>
-  <text x='332' y='248' fill='#93a7c5' font-size='21' font-family='Segoe UI'>The servers most likely to need containment or human review.</text>
+  <text x='332' y='212' fill='#f6f8fe' font-size='44' font-family='Georgia' font-weight='700'>How posture gets assigned.</text>
+  <text x='332' y='248' fill='#93a7c5' font-size='21' font-family='Segoe UI'>The score reflects the real questions operators and security leads ask.</text>
   
   <rect x='332' y='392' width='1240' height='496' rx='24' fill='rgba(10,18,33,0.88)' stroke='rgba(120,163,214,0.16)'/>
-  <text x='356' y='426' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>REVIEW QUEUE</text>
-  <text x='356' y='462' fill='#f6f8fe' font-size='24' font-family='Georgia' font-weight='700'>Review queue for destructive-action exposure.</text>
-  <text x='356' y='492' fill='#93a7c5' font-size='15' font-family='Segoe UI'>The servers most likely to need containment or human review.</text>
-        
-  <rect x='356' y='530' width='1192' height='98' rx='18' fill='rgba(4,9,18,0.58)' stroke='rgba(255,255,255,0.05)'/>
-  <text x='384' y='562' fill='#f6f8fe' font-size='22' font-family='Segoe UI' font-weight='700'>Growth Ops MCP</text>
-  <text x='384' y='584' fill='#93a7c5' font-size='12' font-family='Segoe UI'>Revenue Platform</text>
-  <rect x='1112' y='548' width='104' height='28' rx='14' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
-  <text x='1164' y='567' text-anchor='middle' fill='#ff7a88' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='2'>CONTAIN</text>
-  <text x='1296' y='560' fill='#6f83a0' font-size='10' font-family='Segoe UI' letter-spacing='2'>RISK SCORE</text>
-  <text x='1508' y='566' text-anchor='end' fill='#f6f8fe' font-size='28' font-family='Segoe UI' font-weight='700'>100</text>
-  <text x='384' y='610' fill='#cfe0f7' font-size='13' font-family='Segoe UI'>Legacy API-key auth is still carrying high-trust actions.</text>
-            
+  <text x='356' y='426' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>AUDIT METHODOLOGY</text>
+  <text x='356' y='462' fill='#f6f8fe' font-size='24' font-family='Georgia' font-weight='700'>How posture gets assigned.</text>
+  <text x='356' y='492' fill='#93a7c5' font-size='15' font-family='Segoe UI'>The score reflects the real questions operators and security leads ask.</text>
+  <rect x='356' y='526' width='520' height='104' rx='18' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.05)'/>
+  <text x='382' y='554' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>AUTHENTICATION MODEL</text>
+  <text x='382' y='586' fill='#f6f8fe' font-size='16' font-family='Segoe UI' font-weight='700'>Can the identity lane survive production pressure?</text>
+  <text x='382' y='614' fill='#93a7c5' font-size='13' font-family='Segoe UI'>Legacy API-key trust drags the score because it weakens tenant accountability.</text>
+  <rect x='356' y='646' width='520' height='104' rx='18' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.05)'/>
+  <text x='382' y='674' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>NETWORK ZONING</text>
+  <text x='382' y='706' fill='#f6f8fe' font-size='16' font-family='Segoe UI' font-weight='700'>Does the server live inside a defendable boundary?</text>
+  <text x='382' y='734' fill='#93a7c5' font-size='13' font-family='Segoe UI'>Internet-reachable servers must earn that exposure with stronger approvals.</text>
+  <rect x='900' y='526' width='648' height='256' rx='22' fill='rgba(2,6,12,0.92)' stroke='rgba(255,255,255,0.08)'/>
+  <text x='928' y='556' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>EVAL_ENGINE_STRICT.PY</text>
+  <text x='928' y='598' fill='#d9e6ff' font-size='13' font-family='Courier New'>if auth == 'api-key': risk += 18</text>
+  <text x='928' y='626' fill='#d9e6ff' font-size='13' font-family='Courier New'>if network == 'internet-reachable': risk += 16</text>
+  <text x='928' y='654' fill='#d9e6ff' font-size='13' font-family='Courier New'>if destructive and not approval: risk += 15</text>
+  <text x='928' y='682' fill='#d9e6ff' font-size='13' font-family='Courier New'>if schema &lt; 70: risk += 8</text>
+  <text x='928' y='710' fill='#d9e6ff' font-size='13' font-family='Courier New'>if evidence &lt; 60: risk += 8</text>
+  <text x='928' y='752' fill='#93a7c5' font-size='12' font-family='Segoe UI'>Operator-first. CISO-legible. CI-native.</text>
+    
 </svg>

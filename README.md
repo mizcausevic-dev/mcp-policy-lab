@@ -22,7 +22,7 @@ Many MCP examples stop at connectivity. Real platform and security teams need a 
 ![Overview](./screenshots/01-overview.svg)
 ![Policy queue](./screenshots/02-policy-queue.svg)
 ![Tool matrix](./screenshots/03-tool-matrix.svg)
-![API summary](./screenshots/04-api-summary.svg)
+![Audit methodology](./screenshots/04-audit-methodology.svg)
 
 ## What it includes
 
@@ -47,6 +47,7 @@ Open:
 - [http://127.0.0.1:4926/](http://127.0.0.1:4926/)
 - [http://127.0.0.1:4926/policies](http://127.0.0.1:4926/policies)
 - [http://127.0.0.1:4926/tool-matrix](http://127.0.0.1:4926/tool-matrix)
+- [http://127.0.0.1:4926/audit](http://127.0.0.1:4926/audit)
 - [http://127.0.0.1:4926/docs](http://127.0.0.1:4926/docs)
 
 If the port is busy:

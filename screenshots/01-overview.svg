@@ -1,17 +1,133 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='1440' height='900' viewBox='0 0 1440 900'>
+<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='980' viewBox='0 0 1600 980'>
   <defs>
-    <linearGradient id='bg' x1='0' x2='1' y1='0' y2='1'>
-      <stop offset='0%' stop-color='#07101b'/>
-      <stop offset='100%' stop-color='#0f2240'/>
+    <linearGradient id='bg' x1='0' x2='0' y1='0' y2='1'>
+      <stop offset='0%' stop-color='#02050b'/>
+      <stop offset='100%' stop-color='#07101b'/>
+    </linearGradient>
+    <linearGradient id='hero' x1='0' x2='1' y1='0' y2='1'>
+      <stop offset='0%' stop-color='#0a1221'/>
+      <stop offset='100%' stop-color='#08111d'/>
+    </linearGradient>
+    <linearGradient id='blue' x1='0' x2='1' y1='0' y2='0'>
+      <stop offset='0%' stop-color='#0d94c8'/>
+      <stop offset='100%' stop-color='#3978ff'/>
+    </linearGradient>
+    <linearGradient id='good' x1='0' x2='1' y1='0' y2='0'>
+      <stop offset='0%' stop-color='#1f8bd1'/>
+      <stop offset='100%' stop-color='#44d39d'/>
+    </linearGradient>
+    <linearGradient id='watch' x1='0' x2='1' y1='0' y2='0'>
+      <stop offset='0%' stop-color='#2f82ff'/>
+      <stop offset='100%' stop-color='#f4c76d'/>
+    </linearGradient>
+    <linearGradient id='hot' x1='0' x2='1' y1='0' y2='0'>
+      <stop offset='0%' stop-color='#d14d6c'/>
+      <stop offset='100%' stop-color='#ff7a88'/>
     </linearGradient>
   </defs>
-  <rect width='1440' height='900' fill='url(#bg)'/>
-  <rect x='38' y='36' width='1364' height='828' rx='24' fill='#0b1728' stroke='#1f3e62'/>
-  <text x='52' y='98' fill='#73b7ff' font-size='18' letter-spacing='4' font-family='Segoe UI'>MCP POLICY LAB</text>
-  <text x='52' y='166' fill='#f5f9ff' font-size='54' font-weight='700' font-family='Georgia, Segoe UI'>Control-plane summary for MCP trust posture.</text>
-  <text x='52' y='198' fill='#9eb3cf' font-size='24' font-family='Segoe UI'>Server count, critical lanes, and operator recommendations at a glance.</text>
-  <text x='52' y='220' fill='#d9e6ff' font-size='22' font-family='Segoe UI'>Servers under policy review: 4</text>
-<text x='52' y='264' fill='#d9e6ff' font-size='22' font-family='Segoe UI'>Critical containment lanes: 1</text>
-<text x='52' y='308' fill='#d9e6ff' font-size='22' font-family='Segoe UI'>Average risk score: 50</text>
-<text x='52' y='352' fill='#d9e6ff' font-size='22' font-family='Segoe UI'>Lead recommendation: Hold internet-reachable destructive tools behind approval until the containment lane clears.</text>
+  <rect width='1600' height='980' fill='url(#bg)'/>
+  <rect x='0' y='0' width='260' height='980' fill='rgba(0,0,0,0.32)'/>
+  <rect x='0' y='0' width='260' height='980' fill='none' stroke='rgba(255,255,255,0.06)'/>
+  <rect x='22' y='26' width='216' height='64' rx='20' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.08)'/>
+  <rect x='36' y='38' width='40' height='40' rx='12' fill='url(#blue)'/>
+  <text x='56' y='63' text-anchor='middle' fill='#ffffff' font-size='16' font-family='Segoe UI' font-weight='700'>PL</text>
+  <text x='90' y='58' fill='#f6f8fe' font-size='15' font-family='Segoe UI' font-weight='700'>MCP Policy Lab</text>
+  <text x='90' y='76' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>INSTANCE: POL-ALPHA</text>
+  <text x='36' y='142' fill='#6ec5ff' font-size='11' font-family='Segoe UI' letter-spacing='4'>ACTIVE VIEWS</text>
+  <rect x='26' y='164' width='208' height='42' rx='14' fill='rgba(110,197,255,0.08)' stroke='rgba(110,197,255,0.16)'/>
+  <text x='42' y='190' fill='#6ec5ff' font-size='12' font-family='Segoe UI' letter-spacing='2'>OVERVIEW</text>
+  <text x='42' y='236' fill='#7f92ae' font-size='12' font-family='Segoe UI' letter-spacing='2'>POLICY QUEUE</text>
+  <text x='42' y='282' fill='#7f92ae' font-size='12' font-family='Segoe UI' letter-spacing='2'>TOOL MATRIX</text>
+  <text x='42' y='328' fill='#7f92ae' font-size='12' font-family='Segoe UI' letter-spacing='2'>AUDIT METHODOLOGY</text>
+  <rect x='260' y='0' width='1340' height='72' fill='rgba(0,0,0,0.32)'/>
+  <rect x='260' y='72' width='1340' height='1' fill='rgba(255,255,255,0.08)'/>
+  <rect x='294' y='20' width='184' height='30' rx='15' fill='rgba(110,197,255,0.05)' stroke='rgba(110,197,255,0.14)'/>
+  <circle cx='314' cy='35' r='5' fill='#6ec5ff'/>
+  <text x='330' y='39' fill='#a8d8ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>SAFETY FEED ACTIVE</text>
+  <rect x='1290' y='16' width='250' height='38' rx='19' fill='url(#blue)'/>
+  <text x='1415' y='39' fill='#ffffff' text-anchor='middle' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='3'>OPEN API DOCS</text>
+  <rect x='294' y='104' width='1240' height='248' rx='28' fill='url(#hero)' stroke='rgba(120,163,214,0.18)'/>
+  <text x='332' y='146' fill='#6ec5ff' font-size='11' font-family='Segoe UI' letter-spacing='5'>MCP POLICY LAB</text>
+  <text x='332' y='212' fill='#f6f8fe' font-size='44' font-family='Georgia' font-weight='700'>Control-plane summary for MCP trust posture.</text>
+  <text x='332' y='248' fill='#93a7c5' font-size='21' font-family='Segoe UI'>Server count, critical lanes, and operator recommendations at a glance.</text>
+  
+  <rect x='332' y='274' width='280' height='132' rx='20' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='354' y='302' fill='#71839d' font-size='10' font-family='Segoe UI' letter-spacing='3'>SERVERS UNDER REVIEW</text>
+  <text x='354' y='346' fill='#f6f8fe' font-size='38' font-family='Segoe UI' font-weight='700'>4</text>
+  <text x='354' y='376' fill='#93a7c5' font-size='14' font-family='Segoe UI'>Policy-evaluated MCP servers across current lanes.</text>
+    
+  <rect x='628' y='274' width='280' height='132' rx='20' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='650' y='302' fill='#71839d' font-size='10' font-family='Segoe UI' letter-spacing='3'>CONTAINMENT LANES</text>
+  <text x='650' y='346' fill='#f6f8fe' font-size='38' font-family='Segoe UI' font-weight='700'>1</text>
+  <text x='650' y='376' fill='#93a7c5' font-size='14' font-family='Segoe UI'>Servers that should not expand trust yet.</text>
+    
+  <rect x='924' y='274' width='280' height='132' rx='20' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='946' y='302' fill='#71839d' font-size='10' font-family='Segoe UI' letter-spacing='3'>AVERAGE RISK SCORE</text>
+  <text x='946' y='346' fill='#f6f8fe' font-size='38' font-family='Segoe UI' font-weight='700'>50</text>
+  <text x='946' y='376' fill='#93a7c5' font-size='14' font-family='Segoe UI'>Cross-surface posture based on tools and controls.</text>
+    
+  <rect x='1220' y='274' width='280' height='132' rx='20' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='1242' y='302' fill='#71839d' font-size='10' font-family='Segoe UI' letter-spacing='3'>TOOL INVENTORY</text>
+  <text x='1242' y='346' fill='#f6f8fe' font-size='38' font-family='Segoe UI' font-weight='700'>11</text>
+  <text x='1242' y='376' fill='#93a7c5' font-size='14' font-family='Segoe UI'>Tools scored for approval, schema, and evidence.</text>
+    
+  <rect x='332' y='380' width='1240' height='94' rx='20' fill='rgba(2,8,17,0.62)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='356' y='410' fill='#6ec5ff' font-size='10' font-family='Segoe UI' letter-spacing='3'>LEAD RECOMMENDATION</text>
+  <text x='356' y='446' fill='#d7e5fb' font-size='18' font-family='Segoe UI'>Hold internet-reachable destructive tools behind approval until the containment lane clears.</text>
+  <rect x='332' y='500' width='410' height='388' rx='22' fill='rgba(4,9,18,0.55)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='356' y='534' fill='#f6f8fe' font-size='20' font-family='Segoe UI' font-weight='700'>Average trust metrics</text>
+  
+  <text x='356' y='578' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Auth model strength</text>
+  <text x='606' y='578' text-anchor='end' fill='#cfe0f7' font-size='12' font-family='Segoe UI' font-weight='700'>76%</text>
+  <rect x='356' y='590' width='260' height='10' rx='5' fill='rgba(255,255,255,0.06)'/>
+  <rect x='356' y='590' width='197' height='10' rx='5' fill='url(#watch)'/>
+    
+  
+  <text x='356' y='640' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Network zoning</text>
+  <text x='606' y='640' text-anchor='end' fill='#cfe0f7' font-size='12' font-family='Segoe UI' font-weight='700'>71%</text>
+  <rect x='356' y='652' width='260' height='10' rx='5' fill='rgba(255,255,255,0.06)'/>
+  <rect x='356' y='652' width='184' height='10' rx='5' fill='url(#watch)'/>
+    
+  
+  <text x='356' y='702' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Approval hygiene</text>
+  <text x='606' y='702' text-anchor='end' fill='#cfe0f7' font-size='12' font-family='Segoe UI' font-weight='700'>75%</text>
+  <rect x='356' y='714' width='260' height='10' rx='5' fill='rgba(255,255,255,0.06)'/>
+  <rect x='356' y='714' width='195' height='10' rx='5' fill='url(#watch)'/>
+    
+  
+  <text x='356' y='764' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Evidence retention</text>
+  <text x='606' y='764' text-anchor='end' fill='#cfe0f7' font-size='12' font-family='Segoe UI' font-weight='700'>82%</text>
+  <rect x='356' y='776' width='260' height='10' rx='5' fill='rgba(255,255,255,0.06)'/>
+  <rect x='356' y='776' width='212' height='10' rx='5' fill='url(#good)'/>
+    
+  <rect x='770' y='500' width='802' height='388' rx='22' fill='rgba(4,9,18,0.55)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='794' y='534' fill='#f6f8fe' font-size='20' font-family='Segoe UI' font-weight='700'>Server posture board</text>
+        
+  <rect x='794' y='570' width='754' height='84' rx='18' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.05)'/>
+  <text x='820' y='600' fill='#f6f8fe' font-size='20' font-family='Segoe UI' font-weight='700'>Growth Ops MCP</text>
+  <text x='820' y='622' fill='#93a7c5' font-size='12' font-family='Segoe UI'>Revenue Platform · production · api-key</text>
+  <rect x='1210' y='588' width='104' height='28' rx='14' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='1262' y='607' text-anchor='middle' fill='#ff7a88' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='2'>CONTAIN</text>
+  <text x='1380' y='602' fill='#6f83a0' font-size='10' font-family='Segoe UI' letter-spacing='2'>RISK SCORE</text>
+  <text x='1516' y='606' text-anchor='end' fill='#f6f8fe' font-size='28' font-family='Segoe UI' font-weight='700'>100</text>
+  <text x='820' y='642' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Schema 63.7% · Evidence 45.3% · Freeze destructive tools behind human approval before broader rollout....</text>
+            
+  <rect x='794' y='672' width='754' height='84' rx='18' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.05)'/>
+  <text x='820' y='702' fill='#f6f8fe' font-size='20' font-family='Segoe UI' font-weight='700'>Core Bridge</text>
+  <text x='820' y='724' fill='#93a7c5' font-size='12' font-family='Segoe UI'>Platform Security · production · workload-jwt</text>
+  <rect x='1210' y='690' width='104' height='28' rx='14' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='1262' y='709' text-anchor='middle' fill='#44d39d' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='2'>STABLE</text>
+  <text x='1380' y='704' fill='#6f83a0' font-size='10' font-family='Segoe UI' letter-spacing='2'>RISK SCORE</text>
+  <text x='1516' y='708' text-anchor='end' fill='#f6f8fe' font-size='28' font-family='Segoe UI' font-weight='700'>37</text>
+  <text x='820' y='744' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Schema 94% · Evidence 98.3% · Keep the current controls and re-run the policy check after the next s...</text>
+            
+  <rect x='794' y='774' width='754' height='84' rx='18' fill='rgba(255,255,255,0.03)' stroke='rgba(255,255,255,0.05)'/>
+  <text x='820' y='804' fill='#f6f8fe' font-size='20' font-family='Segoe UI' font-weight='700'>Analytics Fabric</text>
+  <text x='820' y='826' fill='#93a7c5' font-size='12' font-family='Segoe UI'>Data Platform · production · workload-jwt</text>
+  <rect x='1210' y='792' width='104' height='28' rx='14' fill='rgba(255,255,255,0.04)' stroke='rgba(255,255,255,0.06)'/>
+  <text x='1262' y='811' text-anchor='middle' fill='#44d39d' font-size='10' font-family='Segoe UI' font-weight='700' letter-spacing='2'>STABLE</text>
+  <text x='1380' y='806' fill='#6f83a0' font-size='10' font-family='Segoe UI' letter-spacing='2'>RISK SCORE</text>
+  <text x='1516' y='810' text-anchor='end' fill='#f6f8fe' font-size='28' font-family='Segoe UI' font-weight='700'>35</text>
+  <text x='820' y='846' fill='#cfe0f7' font-size='12' font-family='Segoe UI'>Schema 90.3% · Evidence 95.7% · Keep the current controls and re-run the policy check after the next s...</text>
+            
 </svg>
