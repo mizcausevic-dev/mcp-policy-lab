@@ -1,0 +1,163 @@
+{
+  "servers": [
+    {
+      "serverId": "srv-core-bridge",
+      "name": "Core Bridge",
+      "owner": "Platform Security",
+      "environment": "production",
+      "authModel": "workload-jwt",
+      "networkZone": "shared-control",
+      "humanApprovalRate": 100,
+      "schemaReviewDays": 12,
+      "sessionLogging": true,
+      "evidenceRetentionDays": 365,
+      "toolCount": 3,
+      "tools": [
+        {
+          "toolId": "list-connectors",
+          "name": "List Connectors",
+          "riskClass": "low",
+          "destructive": false,
+          "requiresApproval": false,
+          "schemaCoverage": 98,
+          "evidenceCoverage": 95
+        },
+        {
+          "toolId": "rotate-token",
+          "name": "Rotate Token",
+          "riskClass": "high",
+          "destructive": true,
+          "requiresApproval": true,
+          "schemaCoverage": 93,
+          "evidenceCoverage": 100
+        },
+        {
+          "toolId": "disable-endpoint",
+          "name": "Disable Endpoint",
+          "riskClass": "critical",
+          "destructive": true,
+          "requiresApproval": true,
+          "schemaCoverage": 91,
+          "evidenceCoverage": 100
+        }
+      ]
+    },
+    {
+      "serverId": "srv-growth-ops",
+      "name": "Growth Ops MCP",
+      "owner": "Revenue Platform",
+      "environment": "production",
+      "authModel": "api-key",
+      "networkZone": "internet-reachable",
+      "humanApprovalRate": 40,
+      "schemaReviewDays": 67,
+      "sessionLogging": false,
+      "evidenceRetentionDays": 30,
+      "toolCount": 3,
+      "tools": [
+        {
+          "toolId": "segment-export",
+          "name": "Segment Export",
+          "riskClass": "medium",
+          "destructive": false,
+          "requiresApproval": false,
+          "schemaCoverage": 72,
+          "evidenceCoverage": 54
+        },
+        {
+          "toolId": "campaign-pause",
+          "name": "Campaign Pause",
+          "riskClass": "high",
+          "destructive": true,
+          "requiresApproval": false,
+          "schemaCoverage": 61,
+          "evidenceCoverage": 43
+        },
+        {
+          "toolId": "lead-delete",
+          "name": "Lead Delete",
+          "riskClass": "critical",
+          "destructive": true,
+          "requiresApproval": false,
+          "schemaCoverage": 58,
+          "evidenceCoverage": 39
+        }
+      ]
+    },
+    {
+      "serverId": "srv-support-copilot",
+      "name": "Support Copilot",
+      "owner": "Customer Operations",
+      "environment": "staging",
+      "authModel": "oidc",
+      "networkZone": "internal",
+      "humanApprovalRate": 75,
+      "schemaReviewDays": 21,
+      "sessionLogging": true,
+      "evidenceRetentionDays": 120,
+      "toolCount": 2,
+      "tools": [
+        {
+          "toolId": "refund-draft",
+          "name": "Refund Draft",
+          "riskClass": "medium",
+          "destructive": false,
+          "requiresApproval": true,
+          "schemaCoverage": 88,
+          "evidenceCoverage": 86
+        },
+        {
+          "toolId": "account-freeze",
+          "name": "Account Freeze",
+          "riskClass": "high",
+          "destructive": true,
+          "requiresApproval": true,
+          "schemaCoverage": 85,
+          "evidenceCoverage": 90
+        }
+      ]
+    },
+    {
+      "serverId": "srv-analytics-fabric",
+      "name": "Analytics Fabric",
+      "owner": "Data Platform",
+      "environment": "production",
+      "authModel": "workload-jwt",
+      "networkZone": "internal",
+      "humanApprovalRate": 85,
+      "schemaReviewDays": 18,
+      "sessionLogging": true,
+      "evidenceRetentionDays": 180,
+      "toolCount": 3,
+      "tools": [
+        {
+          "toolId": "query-runner",
+          "name": "Query Runner",
+          "riskClass": "medium",
+          "destructive": false,
+          "requiresApproval": false,
+          "schemaCoverage": 89,
+          "evidenceCoverage": 94
+        },
+        {
+          "toolId": "warehouse-refresh",
+          "name": "Warehouse Refresh",
+          "riskClass": "high",
+          "destructive": true,
+          "requiresApproval": true,
+          "schemaCoverage": 90,
+          "evidenceCoverage": 96
+        },
+        {
+          "toolId": "masking-policy-update",
+          "name": "Masking Policy Update",
+          "riskClass": "high",
+          "destructive": true,
+          "requiresApproval": true,
+          "schemaCoverage": 92,
+          "evidenceCoverage": 97
+        }
+      ]
+    }
+  ]
+}
