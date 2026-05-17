@@ -36,7 +36,7 @@ Many MCP examples stop at connectivity. Real platform and security teams need a 
 ## Local run
 
 ```powershell
-Set-Location "C:\Users\chaus\dev\repos\mcp-policy-lab"
+cd mcp-policy-lab
 py -3.11 -m venv .venv
 .\.venv\Scripts\pip.exe install -r requirements.txt
 .\.venv\Scripts\python.exe -m app.main
