@@ -1,6 +1,6 @@
 # MCP Policy Lab
 
-Python and FastAPI control surface for **evaluating MCP server trust posture**, destructive-action controls, schema hygiene, and operator-facing review workflows.
+Python and FastAPI **sample-data policy lab** for exploring MCP server trust posture, destructive-action controls, schema hygiene, and operator-facing review workflows. It does not connect to live MCP servers or enforce tool permissions.
 
 > **What this repo proves**
 >
@@ -19,10 +19,13 @@ Many MCP examples stop at connectivity. Real platform and security teams need a 
 
 ## Screenshots
 
-![Overview](./screenshots/01-overview.svg)
-![Policy queue](./screenshots/02-policy-queue.svg)
-![Tool matrix](./screenshots/03-tool-matrix.svg)
-![Audit methodology](./screenshots/04-audit-methodology.svg)
+These are browser captures of the local service with its bundled synthetic inventory, taken at 1600 × 1000. They are not production monitoring evidence.
+
+![Overview of synthetic server posture](./screenshots/01-overview.png)
+![Policy queue using synthetic servers](./screenshots/02-policy-queue.png)
+![Tool matrix using synthetic tools](./screenshots/03-tool-matrix.png)
+![Audit scoring methodology](./screenshots/04-audit-methodology.png)
+![390-pixel mobile overview of the synthetic fixture](./screenshots/05-mobile-overview.png)
 
 ## What it includes
 
@@ -63,7 +66,6 @@ $env:PORT = "4930"
 .\.venv\Scripts\python.exe -m unittest discover -s tests
 .\.venv\Scripts\python.exe scripts\run_demo.py
 .\.venv\Scripts\python.exe scripts\smoke_check.py
-.\.venv\Scripts\python.exe scripts\render_readme_assets.py
 ```
 
 ## API routes

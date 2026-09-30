@@ -26,6 +26,12 @@ class MCPPolicyLabTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["name"], "Growth Ops MCP")
 
+    def test_ui_discloses_synthetic_source(self) -> None:
+        response = TestClient(app).get("/")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Sample data · no live feed", response.text)
+        self.assertIn("Bundled sample inventory", response.text)
+
 
 if __name__ == "__main__":
     unittest.main()
