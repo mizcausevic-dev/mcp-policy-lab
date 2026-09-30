@@ -33,8 +33,20 @@ These are browser captures of the local service with its bundled synthetic inven
 - sample MCP server inventory with tool-level risk classes
 - posture scoring for auth model, network zone, approval hygiene, schema coverage, and evidence retention
 - operator queue for `review` and `contain` lanes
-- SVG proof assets generated from the same service state
+- browser screenshots of the bundled synthetic inventory
 - unit tests, smoke checks, and GitHub Actions CI
+
+## Read-only inventory review
+
+`scripts/review_inventory.py` turns one **complete, locally captured** MCP `tools/list` JSON response into a review packet. It makes no network connection and calls no MCP tool. Pass the source label and full source commit you observed when capturing the file; these values are reported provenance, not cryptographic attestations:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\review_inventory.py .\tools-list.json --source local-mcp-server --commit 0123456789abcdef0123456789abcdef01234567 > .\review-packet.json
+```
+
+The packet records import time and input SHA-256, counts schema fields, and lists self-declared `readOnlyHint`, `destructiveHint`, `idempotentHint`, and `openWorldHint` values. It separately lists names with missing read-only hints and names declaring non-read-only, destructive, or open-world behavior. It omits descriptions, schema contents, and defaults. It rejects a paginated or malformed inventory, duplicate tool names, and invalid hints. Tool names remain in the local packet; inspect it before sharing.
+
+An operator can optionally supply a local JSON map of tool names to `read-only`, `approval-required`, `block`, or `needs-evidence` using `--decisions .\operator-decisions.json`. The packet counts recorded dispositions and flags direct conflicts with declared hints. Every tool remains `unassessed`: a server's annotations and an operator label do not prove authentication, side effects, logging, approval enforcement, or retention. The web UI and APIs above still use only the bundled synthetic fixture.
 
 ## Local run
 
