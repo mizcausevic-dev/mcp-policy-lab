@@ -48,6 +48,8 @@ The packet records import time and input SHA-256, counts schema fields, and list
 
 An operator can optionally supply a local JSON map of tool names to `read-only`, `approval-required`, `block`, or `needs-evidence` using `--decisions .\operator-decisions.json`. The packet counts recorded dispositions and flags direct conflicts with declared hints. Every tool remains `unassessed`: a server's annotations and an operator label do not prove authentication, side effects, logging, approval enforcement, or retention. The web UI and APIs above still use only the bundled synthetic fixture.
 
+A [source-bound Kinetic Gain review draft](docs/pilots/mcp-kinetic-gain-operator-review-2026-09-30.md) includes a 75-tool provisional disposition map. Its operation labels come from static handler review and require accountable operator confirmation against the deployed client, target, and permissions before use.
+
 ## Local run
 
 ```powershell
