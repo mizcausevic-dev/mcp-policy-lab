@@ -47,7 +47,7 @@ class InventoryReviewTests(unittest.TestCase):
             imported_at="2026-09-30T20:00:00Z",
         )
         self.assertEqual(packet["toolCount"], 2)
-        self.assertEqual(packet["operatorDispositionCount"], 0)
+        self.assertEqual(packet["proposedDispositionCount"], 0)
         self.assertEqual(packet["assessment"], "operator-review-required")
         self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
         self.assertEqual(packet["tools"][1]["declaredHints"]["destructive"], True)
@@ -57,7 +57,7 @@ class InventoryReviewTests(unittest.TestCase):
         self.assertEqual(packet["missingReadOnlyToolNames"], [])
         self.assertNotIn("SECRET_DO_NOT_ECHO", json.dumps(packet))
 
-    def test_operator_disagreement_is_reported_without_claiming_a_pass(self) -> None:
+    def test_proposal_disagreement_is_reported_without_claiming_a_pass(self) -> None:
         packet = build_inventory_review(
             payload(
                 [
@@ -69,12 +69,14 @@ class InventoryReviewTests(unittest.TestCase):
             reported_source="mcp-kinetic-gain",
             reported_commit=SOURCE_COMMIT,
             imported_at="2026-09-30T20:00:00Z",
-            decisions={"read_item": "block", "mutating_item": "read-only"},
+            proposals={"read_item": "block", "mutating_item": "read-only"},
         )
-        self.assertEqual(packet["operatorDispositionCount"], 2)
+        self.assertEqual(packet["proposedDispositionCount"], 2)
+        self.assertEqual(packet["withoutProposedDispositionCount"], 1)
         self.assertEqual(packet["declarationDisagreements"], ["read_item", "mutating_item"])
         self.assertEqual(packet["missingReadOnlyToolNames"], ["unknown_item"])
         self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
+        self.assertEqual(packet["tools"][0]["proposedDisposition"], "block")
 
     def test_partial_or_malformed_inventory_fails_closed(self) -> None:
         cases = [
@@ -91,15 +93,46 @@ class InventoryReviewTests(unittest.TestCase):
             with self.subTest(raw=raw[:50]), self.assertRaises(ValueError):
                 build_inventory_review(raw, "mcp-kinetic-gain", SOURCE_COMMIT)
 
-    def test_unknown_operator_decision_is_rejected(self) -> None:
-        for decisions in ({"other": "read-only"}, {"one": ["read-only"]}):
-            with self.subTest(decisions=decisions), self.assertRaises(ValueError):
+    def test_unknown_proposed_disposition_is_rejected(self) -> None:
+        for proposals in ({"other": "read-only"}, {"one": ["read-only"]}):
+            with self.subTest(proposals=proposals), self.assertRaises(ValueError):
                 build_inventory_review(
                     payload([tool("one")]),
                     "mcp-kinetic-gain",
                     SOURCE_COMMIT,
-                    decisions=decisions,
+                    proposals=proposals,
                 )
+
+    def test_cli_proposals_cannot_be_read_as_operator_authorization(self) -> None:
+        script = Path(__file__).resolve().parents[1] / "scripts" / "review_inventory.py"
+        with tempfile.TemporaryDirectory() as directory:
+            inventory = Path(directory) / "inventory.json"
+            proposals = Path(directory) / "proposals.json"
+            inventory.write_bytes(payload([tool("read_item")]))
+            proposals.write_text('{"read_item":"read-only"}', encoding="utf-8")
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(script),
+                    str(inventory),
+                    "--source",
+                    "mcp-kinetic-gain",
+                    "--commit",
+                    SOURCE_COMMIT,
+                    "--proposals",
+                    str(proposals),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        packet = json.loads(result.stdout)
+        self.assertEqual(packet["proposedDispositionCount"], 1)
+        self.assertEqual(packet["assessment"], "operator-review-required")
+        self.assertEqual(packet["tools"][0]["proposedDisposition"], "read-only")
+        self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
+        self.assertNotIn("operatorDecision", result.stdout)
 
     def test_cli_error_does_not_echo_inventory_content(self) -> None:
         script = Path(__file__).resolve().parents[1] / "scripts" / "review_inventory.py"

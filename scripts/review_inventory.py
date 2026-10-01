@@ -19,19 +19,19 @@ def main() -> int:
     parser.add_argument("inventory", type=Path, help="Complete, local tools/list JSON file")
     parser.add_argument("--source", required=True, help="Reported source label, not an attestation")
     parser.add_argument("--commit", required=True, help="Reported full source commit SHA")
-    parser.add_argument("--decisions", type=Path, help="Optional local tool-name to operator-decision JSON map")
+    parser.add_argument("--proposals", type=Path, help="Optional local tool-name to proposed-disposition JSON map; never authorization")
     args = parser.parse_args()
     try:
         with args.inventory.open("rb") as handle:
             raw = handle.read(MAX_INPUT_BYTES + 1)
-        decisions = None
-        if args.decisions is not None:
-            with args.decisions.open("rb") as handle:
-                decision_bytes = handle.read(MAX_INPUT_BYTES + 1)
-            if len(decision_bytes) > MAX_INPUT_BYTES:
-                raise ValueError("Decision file is too large")
-            decisions = parse_strict_json(decision_bytes)
-        packet = build_inventory_review(raw, args.source, args.commit, decisions=decisions)
+        proposals = None
+        if args.proposals is not None:
+            with args.proposals.open("rb") as handle:
+                proposal_bytes = handle.read(MAX_INPUT_BYTES + 1)
+            if len(proposal_bytes) > MAX_INPUT_BYTES:
+                raise ValueError("Proposal file is too large")
+            proposals = parse_strict_json(proposal_bytes)
+        packet = build_inventory_review(raw, args.source, args.commit, proposals=proposals)
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         # Avoid echoing caller-supplied text, paths, descriptions or schema values.
         print(f"Inventory review failed: {type(exc).__name__}", file=sys.stderr)

@@ -18,7 +18,7 @@ MAX_TOOLS = 1_000
 NAME = re.compile(r"^[A-Za-z0-9_.:/-]{1,128}$")
 SOURCE = re.compile(r"^[A-Za-z0-9_.:/@-]{1,200}$")
 COMMIT = re.compile(r"^[0-9a-f]{40}$")
-DECISIONS = {"read-only", "approval-required", "block", "needs-evidence"}
+DISPOSITIONS = {"read-only", "approval-required", "block", "needs-evidence"}
 HINTS = {
     "readOnlyHint": "readOnly",
     "destructiveHint": "destructive",
@@ -49,7 +49,7 @@ def build_inventory_review(
     reported_source: str,
     reported_commit: str,
     *,
-    decisions: dict[str, str] | None = None,
+    proposals: dict[str, str] | None = None,
     imported_at: str | None = None,
 ) -> dict:
     if not isinstance(raw, bytes) or not 0 < len(raw) <= MAX_INPUT_BYTES:
@@ -71,12 +71,12 @@ def build_inventory_review(
     if not isinstance(tools, list) or not 0 < len(tools) <= MAX_TOOLS:
         raise ValueError("Inventory must contain 1 to 1000 tools")
 
-    decisions = {} if decisions is None else decisions
-    if not isinstance(decisions, dict) or any(
-        not isinstance(name, str) or not isinstance(decision, str) or decision not in DECISIONS
-        for name, decision in decisions.items()
+    proposals = {} if proposals is None else proposals
+    if not isinstance(proposals, dict) or any(
+        not isinstance(name, str) or not isinstance(proposal, str) or proposal not in DISPOSITIONS
+        for name, proposal in proposals.items()
     ):
-        raise ValueError("Operator decisions have an invalid shape or value")
+        raise ValueError("Proposed dispositions have an invalid shape or value")
 
     rows: list[dict] = []
     seen: set[str] = set()
@@ -110,7 +110,7 @@ def build_inventory_review(
                 raise ValueError(f"Tool {index} has a non-boolean annotation hint")
             declared[output_key] = hint
 
-        decision = decisions.get(name)
+        proposal = proposals.get(name)
         if declared["readOnly"] is True and declared["destructive"] is True:
             annotation_conflicts.append(name)
         if (
@@ -121,9 +121,9 @@ def build_inventory_review(
             declared_attention_tools.append(name)
         if declared["readOnly"] is None:
             missing_read_only_tools.append(name)
-        if decision in ("approval-required", "block") and declared["readOnly"] is True:
+        if proposal in ("approval-required", "block") and declared["readOnly"] is True:
             disagreements.append(name)
-        elif decision == "read-only" and (
+        elif proposal == "read-only" and (
             declared["destructive"] is True or declared["readOnly"] is False
         ):
             disagreements.append(name)
@@ -133,13 +133,13 @@ def build_inventory_review(
                 "declaredHints": declared,
                 "schemaPropertyCount": len(properties),
                 "schemaRequiredCount": len(required),
-                "operatorDecision": decision,
+                "proposedDisposition": proposal,
                 "verdict": "unassessed",
             }
         )
 
-    if decisions.keys() - seen:
-        raise ValueError("Operator decision refers to a tool outside the inventory")
+    if proposals.keys() - seen:
+        raise ValueError("Proposed disposition refers to a tool outside the inventory")
     timestamp = imported_at or datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     if not isinstance(timestamp, str) or not timestamp.endswith("Z"):
         raise ValueError("Import time must be a UTC timestamp")
@@ -150,8 +150,8 @@ def build_inventory_review(
         "inputSha256": hashlib.sha256(raw).hexdigest(),
         "assessment": "operator-review-required",
         "toolCount": len(rows),
-        "operatorDispositionCount": len(decisions),
-        "withoutOperatorDispositionCount": len(rows) - len(decisions),
+        "proposedDispositionCount": len(proposals),
+        "withoutProposedDispositionCount": len(rows) - len(proposals),
         "declarationDisagreements": disagreements,
         "annotationConflicts": annotation_conflicts,
         "declaredHintSummary": {

@@ -17,7 +17,7 @@ The other 74 tools have no `readOnlyHint` in the captured descriptor. Missing an
 
 - Source `npm.cmd test -- tests/url-guard.test.ts tests/audit-stream-live.test.ts tests/claims-card.test.ts`: 36/36 passed across three files.
 - Source `npm.cmd run typecheck`: exit 0.
-- The Policy Lab CLI accepted the complete capture plus the disposition map, counted 75 dispositions (48/24/3), and kept 75 verdicts `unassessed`. The local packet and generator live with the capture outside this repository.
+- The Policy Lab CLI accepted the complete capture plus the proposal map, counted 75 proposed dispositions (48/24/3), and kept 75 verdicts `unassessed`. The local packet and generator live with the capture outside this repository. The [pilot permission gate](./mcp-kinetic-gain-permission-gate-2026-10-01.md) records the remaining operator and deployed-boundary proof.
 - This review did **not** call any tool, test a real audit-stream service, inspect a deployed network boundary, use customer data, or verify production rollback. Source tests and static inspection cannot prove those boundaries.
 
 Before operational use, an accountable operator must confirm these provisional labels against the deployed identities, target URLs, permissions, and side effects. The three `block` dispositions must remain in force unless a separate controlled release proves their service boundary and the write path where applicable.
