@@ -116,6 +116,10 @@ def _shell(title: str, subtitle: str, current: str, body: str) -> str:
           linear-gradient(180deg, #02050b 0%, var(--bg) 45%, #03070f 100%);
       }}
       a {{ color: inherit; }}
+      a:focus-visible {{
+        outline: 3px solid var(--amber);
+        outline-offset: 3px;
+      }}
       .shell {{
         min-height: 100vh;
         display: grid;
@@ -740,7 +744,7 @@ def _shell(title: str, subtitle: str, current: str, body: str) -> str:
       }}
       @media (max-width: 1080px) {{
         .shell {{
-          grid-template-columns: 1fr;
+          grid-template-columns: minmax(0, 1fr);
         }}
         .sidebar {{
           display: none;
@@ -755,6 +759,26 @@ def _shell(title: str, subtitle: str, current: str, body: str) -> str:
           align-items: start;
         }}
       }}
+      @media (max-width: 680px) {{
+        .topbar {{
+          height: auto;
+          min-height: 68px;
+          padding: 12px 16px;
+          gap: 10px;
+        }}
+        .topbar-right .meta-block {{ display: none; }}
+        .status-chip {{ font-size: 9px; letter-spacing: 0.06em; padding: 8px 10px; }}
+        .action-pill {{ white-space: nowrap; font-size: 9px; letter-spacing: 0.04em; padding: 10px; }}
+        .wrap {{ padding: 16px; }}
+        .hero {{ padding: 20px; border-radius: 20px; }}
+        .hero-subtitle {{ font-size: 16px; }}
+        .hero-strip {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }}
+        .hero-kpi {{ min-width: 0; }}
+        .stats-grid {{ grid-template-columns: 1fr !important; }}
+      }}
+      @media (prefers-reduced-motion: reduce) {{
+        .side-link {{ transition: none; }}
+      }}
     </style>
   </head>
   <body>
@@ -764,22 +788,22 @@ def _shell(title: str, subtitle: str, current: str, body: str) -> str:
           <div class="brand-mark">PL</div>
           <div class="brand-copy">
             <strong>MCP Policy Lab</strong>
-            <span>Instance: POL-ALPHA</span>
+            <span>Synthetic review fixture</span>
           </div>
         </div>
         <nav>{nav}</nav>
         <dl class="side-meta">
-          <dt>Region</dt>
-          <dd>US-WEST-2</dd>
-          <dt>Postural status</dt>
-          <dd>Operational</dd>
+          <dt>Data source</dt>
+          <dd>Bundled sample inventory</dd>
+          <dt>Connection status</dt>
+          <dd>No live MCP feed</dd>
           <dt>Review pressure</dt>
           <dd>{summary["criticalServers"]} contain / {summary["watchServers"]} review</dd>
         </dl>
       </aside>
       <main class="main">
         <header class="topbar">
-          <div class="status-chip"><span class="status-dot"></span>Safety feed active</div>
+          <div class="status-chip"><span class="status-dot"></span>Sample data · no live feed</div>
           <div class="topbar-right">
             <div class="meta-block">
               <span>Control zone</span>
@@ -1121,7 +1145,7 @@ def render_tool_matrix() -> str:
     """
     return _shell(
         "Tool inventory",
-        "Inventory of all active MCP tools and their evaluated risk signature.",
+        "Synthetic MCP tool inventory and its modeled risk signature.",
         "tools",
         body,
     )
@@ -1134,7 +1158,7 @@ def render_audit_summary() -> str:
         <div class="section-head">
           <strong>Audit methodology</strong>
           <h2>How posture gets assigned.</h2>
-          <p>This is not a toy scorecard. It reflects the real questions operators and security leads ask when an MCP surface moves from demo to production.</p>
+          <p>This sample scorecard makes its weighted factors visible for review. Its verdicts are not production authorization decisions.</p>
         </div>
         <div class="section-body">
           <div class="insight-grid">

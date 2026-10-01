@@ -18,7 +18,8 @@ The repo is intentionally small and local-first:
 - `app/services/policy_service.py` loads sample MCP server and tool records, evaluates risk, and produces operator-friendly queue outputs.
 - `app/render.py` turns the same service state into a control-room style HTML surface.
 - `scripts/run_demo.py` and `scripts/smoke_check.py` provide one-shot validation paths.
-- `scripts/render_readme_assets.py` renders SVG proof assets for the README.
+- The README screenshots are local browser captures of the bundled synthetic inventory.
+- `scripts/review_inventory.py` produces a separate local tools/list review packet; it does not change the sample-backed web routes.
 
 ## Evaluation model
 

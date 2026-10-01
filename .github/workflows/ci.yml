@@ -21,5 +21,3 @@ jobs:
         run: python -m unittest discover -s tests
       - name: Smoke check
         run: python scripts/smoke_check.py
-      - name: Render README assets
-        run: python scripts/render_readme_assets.py
