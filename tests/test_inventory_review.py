@@ -88,6 +88,7 @@ class InventoryReviewTests(unittest.TestCase):
             payload([]),
             b'{"tools":[{"name":"one","inputSchema":{"type":"object"},"annotations":{"readOnlyHint":true,"readOnlyHint":false}}]}',
             b'{"tools":[{"name":"one","inputSchema":{"type":"object"},"annotations":{"readOnlyHint":NaN}}]}',
+            b"[" * 2_000 + b"0" + b"]" * 2_000,
         ]
         for raw in cases:
             with self.subTest(raw=raw[:50]), self.assertRaises(ValueError):
@@ -156,6 +157,33 @@ class InventoryReviewTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertEqual(result.stdout, "")
         self.assertNotIn("SECRET_DO_NOT_ECHO", result.stderr)
+
+    def test_cli_rejects_deeply_nested_proposals_without_traceback(self) -> None:
+        script = Path(__file__).resolve().parents[1] / "scripts" / "review_inventory.py"
+        with tempfile.TemporaryDirectory() as directory:
+            inventory = Path(directory) / "inventory.json"
+            proposals = Path(directory) / "proposals.json"
+            inventory.write_bytes(payload([tool("read_item")]))
+            proposals.write_bytes(b"[" * 2_000 + b"0" + b"]" * 2_000)
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(script),
+                    str(inventory),
+                    "--source",
+                    "sample",
+                    "--commit",
+                    SOURCE_COMMIT,
+                    "--proposals",
+                    str(proposals),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stdout, "")
+        self.assertEqual(result.stderr, "Inventory review failed: ValueError\n")
 
 
 if __name__ == "__main__":

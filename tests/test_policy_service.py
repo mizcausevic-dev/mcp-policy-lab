@@ -31,6 +31,14 @@ class MCPPolicyLabTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("Sample data · no live feed", response.text)
         self.assertIn("Bundled sample inventory", response.text)
+        self.assertIn("no permission enforcement", response.text)
+        self.assertNotIn("MCP-P-2024", response.text)
+        self.assertNotIn("Audit-ready evidence lanes", response.text)
+
+    def test_api_docs_disclose_sample_boundary(self) -> None:
+        response = TestClient(app).get("/openapi.json")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Synthetic sample-data", response.json()["info"]["description"])
 
 
 if __name__ == "__main__":

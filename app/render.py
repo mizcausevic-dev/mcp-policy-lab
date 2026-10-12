@@ -835,9 +835,9 @@ def _shell(title: str, subtitle: str, current: str, body: str) -> str:
           </section>
           {body}
           <div class="footer-strip">
-            <span><strong>Protocol:</strong> MCP-P-2024</span>
-            <span><strong>Retention:</strong> Audit-ready evidence lanes</span>
-            <span><strong>Surface:</strong> Operator-first / CI-native / CISO-legible</span>
+            <span><strong>Fixture:</strong> Bundled sample inventory</span>
+            <span><strong>Evidence:</strong> Sample scoring only; no retention service</span>
+            <span><strong>Scope:</strong> Review aid; no permission enforcement</span>
           </div>
         </div>
       </main>
@@ -1185,7 +1185,7 @@ def render_audit_summary() -> str:
             <div class="panel">
               <div class="code-panel">
                 <div class="code-head">
-                  <span>eval_engine_strict.py</span>
+                  <span>/api/sample</span>
                   <div class="lights"><i></i><i></i><i></i></div>
                 </div>
                 <pre><code>{escape(payload)}</code></pre>
@@ -1199,9 +1199,9 @@ def render_audit_summary() -> str:
               <div class="desc">The output should be useful in a queue, a pull request gate, or an incident review. That is why verdicts, next actions, and evidence posture are all first-class.</div>
             </div>
             <div class="metric-card">
-              <div class="micro">Current compliance note</div>
-              <div class="title">Contain lanes should stay hardware-gated.</div>
-              <div class="desc">Any destructive lane in contain should require an explicit human approval boundary before the surface expands again.</div>
+              <div class="micro">Pilot gate</div>
+              <div class="title">Contain lanes need verified approval.</div>
+              <div class="desc">Before exposing a destructive tool, verify that the deployed boundary requires the intended human approval. The sample score cannot enforce it.</div>
             </div>
           </div>
         </div>

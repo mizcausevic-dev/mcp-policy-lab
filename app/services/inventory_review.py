@@ -41,7 +41,10 @@ def _reject_constant(_value: str) -> None:
 
 
 def parse_strict_json(raw: bytes) -> object:
-    return json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
+    try:
+        return json.loads(raw, object_pairs_hook=_unique_object, parse_constant=_reject_constant)
+    except RecursionError as exc:
+        raise ValueError("JSON exceeds nesting limit") from exc
 
 
 def build_inventory_review(
