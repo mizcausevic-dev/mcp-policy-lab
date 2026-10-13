@@ -126,9 +126,9 @@ def build_inventory_review(
             declared_attention_tools.append(name)
         if declared["readOnly"] is None:
             missing_read_only_tools.append(name)
-        if proposal in ("approval-required", "block") and declared["readOnly"] is True:
-            disagreements.append(name)
-        elif proposal == "read-only" and (
+        # readOnlyHint describes side effects, not whether a network read is
+        # authorized. An approval-required or blocked GET can still be read-only.
+        if proposal == "read-only" and (
             declared["destructive"] is True or declared["readOnly"] is False
         ):
             disagreements.append(name)

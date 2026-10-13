@@ -33,6 +33,24 @@ def tool(name: str, annotations: dict | None = None) -> dict:
 
 
 class InventoryReviewTests(unittest.TestCase):
+    def test_aviation_candidate_map_preserves_base_dispositions(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "docs" / "pilots"
+        base = json.loads((root / "mcp-kinetic-gain-provisional-dispositions.json").read_text(encoding="utf-8"))
+        aviation = json.loads((root / "mcp-kinetic-gain-aviation-provisional-dispositions.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(base), 75)
+        self.assertEqual(len(aviation), 80)
+        self.assertEqual({name: aviation[name] for name in base}, base)
+        self.assertEqual(
+            {name: aviation[name] for name in aviation.keys() - base.keys()},
+            {
+                "aviation_ml_card_validate": "needs-evidence",
+                "aviation_ml_card_inspect": "needs-evidence",
+                "aviation_ml_card_odd_check": "needs-evidence",
+                "aviation_ml_card_dal_check": "needs-evidence",
+                "mro_signoff_verify": "needs-evidence",
+            },
+        )
+
     def test_untrusted_descriptions_and_schema_values_stay_out_of_packet(self) -> None:
         raw = payload(
             [
@@ -58,11 +76,11 @@ class InventoryReviewTests(unittest.TestCase):
         self.assertEqual(packet["missingReadOnlyToolNames"], [])
         self.assertNotIn("SECRET_DO_NOT_ECHO", json.dumps(packet))
 
-    def test_proposal_disagreement_is_reported_without_claiming_a_pass(self) -> None:
+    def test_read_only_proposal_conflict_is_reported_without_conflating_approval(self) -> None:
         packet = build_inventory_review(
             payload(
                 [
-                    tool("read_item", {"readOnlyHint": True, "destructiveHint": False}),
+                    tool("read_item", {"readOnlyHint": True, "destructiveHint": False, "openWorldHint": True}),
                     tool("mutating_item", {"readOnlyHint": False}),
                     tool("unknown_item"),
                 ]
@@ -74,7 +92,8 @@ class InventoryReviewTests(unittest.TestCase):
         )
         self.assertEqual(packet["proposedDispositionCount"], 2)
         self.assertEqual(packet["withoutProposedDispositionCount"], 1)
-        self.assertEqual(packet["declarationDisagreements"], ["read_item", "mutating_item"])
+        self.assertEqual(packet["declarationDisagreements"], ["mutating_item"])
+        self.assertIn("read_item", packet["declaredAttentionToolNames"])
         self.assertEqual(packet["missingReadOnlyToolNames"], ["unknown_item"])
         self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
         self.assertEqual(packet["tools"][0]["proposedDisposition"], "block")
