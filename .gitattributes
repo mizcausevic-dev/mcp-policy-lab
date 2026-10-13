@@ -1,0 +1,2 @@
+# The committed README uses CRLF; only its carriage return is exempt from whitespace checks.
+README.md whitespace=cr-at-eol

@@ -48,6 +48,7 @@ class PolicyService:
                     "toolCount": server["toolCount"],
                     "riskScore": evaluation["riskScore"],
                     "verdict": evaluation["verdict"],
+                    "dispositionBasis": evaluation["dispositionBasis"],
                     "schemaCoverage": evaluation["schemaCoverage"],
                     "evidenceCoverage": evaluation["evidenceCoverage"],
                     "nextAction": evaluation["nextAction"],
@@ -99,11 +100,17 @@ class PolicyService:
                     "owner": server["owner"],
                     "riskScore": evaluation["riskScore"],
                     "verdict": evaluation["verdict"],
+                    "dispositionBasis": evaluation["dispositionBasis"],
                     "policyGap": evaluation["topConcern"],
                     "nextAction": evaluation["nextAction"],
                 }
             )
-        return sorted(queue, key=lambda item: item["riskScore"], reverse=True)
+        lane_priority = {"contain": 2, "review": 1}
+        return sorted(
+            queue,
+            key=lambda item: (lane_priority[item["verdict"]], item["riskScore"]),
+            reverse=True,
+        )
 
     def sample_payload(self) -> dict:
         catalog = self.server_catalog()
@@ -149,48 +156,101 @@ class PolicyService:
         schema_coverage = round(mean(tool["schemaCoverage"] for tool in server["tools"]), 1)
         evidence_coverage = round(mean(tool["evidenceCoverage"] for tool in server["tools"]), 1)
 
-        if risk_score >= 80:
+        unapproved_destructive = any(
+            tool["destructive"] and not tool["requiresApproval"] for tool in server["tools"]
+        )
+        missing_review_evidence = (
+            not server["sessionLogging"]
+            or server["evidenceRetentionDays"] < 90
+            or server["schemaReviewDays"] > 45
+            or (server["humanApprovalRate"] < 60 and any(tool["destructive"] for tool in server["tools"]))
+            or any(
+                tool["schemaCoverage"] < 70 or tool["evidenceCoverage"] < 60
+                for tool in server["tools"]
+            )
+        )
+
+        if unapproved_destructive or risk_score >= 80:
             verdict = "contain"
-            next_action = "Freeze destructive tools behind human approval before broader rollout."
-        elif risk_score >= 55:
+        elif missing_review_evidence or risk_score >= 55:
             verdict = "review"
-            next_action = "Route the server into policy review and refresh schema/evidence coverage."
         else:
             verdict = "stable"
-            next_action = "Keep the current controls and re-run the policy check after the next schema change."
 
-        top_concern = self._top_concern(server, schema_coverage, evidence_coverage)
+        if unapproved_destructive:
+            disposition_basis = "unapproved-destructive-hard-gate"
+        elif risk_score >= 55:
+            disposition_basis = "weighted-score"
+        elif missing_review_evidence:
+            disposition_basis = "missing-review-evidence-floor"
+        else:
+            disposition_basis = "sample-thresholds-met"
+
+        top_concern, next_action = self._primary_gap(server, verdict)
         return {
             "serverId": server["serverId"],
             "riskScore": risk_score,
             "schemaCoverage": schema_coverage,
             "evidenceCoverage": evidence_coverage,
             "verdict": verdict,
+            "dispositionBasis": disposition_basis,
             "topConcern": top_concern,
             "nextAction": next_action,
         }
 
-    def _top_concern(self, server: dict, schema_coverage: float, evidence_coverage: float) -> str:
-        if server["authModel"] == "api-key":
-            return "Legacy API-key auth is still carrying high-trust actions."
+    def _primary_gap(self, server: dict, verdict: str) -> tuple[str, str]:
+        if any(tool["destructive"] and not tool["requiresApproval"] for tool in server["tools"]):
+            return (
+                "A destructive tool lacks a required approval gate.",
+                "Disable unapproved destructive tool access until human approval is enforced and verified.",
+            )
         if not server["sessionLogging"]:
-            return "Session logging is missing for operator-critical tool usage."
-        if schema_coverage < 75:
-            return "Tool schemas are under-documented for safe review and approval."
-        if evidence_coverage < 70:
-            return "Evidence retention is too thin for post-incident review."
-        if server["humanApprovalRate"] < 60:
-            return "Destructive actions are bypassing human approval too often."
-        return "Review pressure is rising, but the server remains within the stable policy lane."
+            return (
+                "Session logging is missing from this sample server.",
+                "Enable and verify session logging before expanding tool access.",
+            )
+        if server["evidenceRetentionDays"] < 90 or any(
+            tool["evidenceCoverage"] < 60 for tool in server["tools"]
+        ):
+            return (
+                "The sample records insufficient evidence coverage or retention.",
+                "Review evidence capture and retention against the intended incident workflow before expansion.",
+            )
+        if server["schemaReviewDays"] > 45 or any(
+            tool["schemaCoverage"] < 70 for tool in server["tools"]
+        ):
+            return (
+                "Tool schema coverage or review recency needs attention.",
+                "Review affected tool schemas and refresh the schema review record before expansion.",
+            )
+        if server["authModel"] == "api-key":
+            return (
+                "API-key authentication needs an explicit scope review.",
+                "Review the API-key scope, rotation, and caller binding for this tool set.",
+            )
+        if server["humanApprovalRate"] < 60 and any(
+            tool["destructive"] for tool in server["tools"]
+        ):
+            return (
+                "The sample approval rate is low for a destructive tool set.",
+                "Inspect approval records and verify that destructive calls cannot bypass the gate.",
+            )
+        if verdict != "stable":
+            return (
+                "The weighted sample score calls for operator review.",
+                "Review the tool risks and their deployed controls before expanding access.",
+            )
+        return (
+            "No sample threshold was crossed.",
+            "Recheck after a tool or schema change; this sample score does not authorize access.",
+        )
 
     def _lead_recommendation(self, evaluations: list[dict]) -> str:
-        critical = [item for item in evaluations if item["verdict"] == "contain"]
-        if critical:
-            return "Hold internet-reachable destructive tools behind approval until the containment lane clears."
-        review = [item for item in evaluations if item["verdict"] == "review"]
-        if review:
-            return "Prioritize schema and evidence hardening before expanding server count."
-        return "Current MCP posture is stable enough to add new internal tools cautiously."
+        for verdict in ("contain", "review"):
+            lane = [item for item in evaluations if item["verdict"] == verdict]
+            if lane:
+                return max(lane, key=lambda item: item["riskScore"])["nextAction"]
+        return "Recheck after a tool or schema change; sample scores do not authorize access."
 
     def _tool_matrix_for_server(self, server: dict) -> list[dict]:
         rows = []

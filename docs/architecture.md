@@ -36,7 +36,9 @@ Each server posture is scored from:
 - schema coverage
 - evidence coverage
 
-The score resolves into one of three lanes:
+The weighted score informs one of three sample lanes. An unapproved destructive tool forces `contain` regardless of its numeric score. Missing session logging, short retention, stale or thin schema/evidence review, and low approval rates on destructive tool sets force at least `review`. `dispositionBasis` makes that override visible in the API; the queue orders containment before review, then sorts by numeric score within each lane. These are review heuristics, not permission grants or proof that deployed controls work.
+
+The lanes are:
 
 - `stable`
 - `review`

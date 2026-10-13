@@ -103,6 +103,8 @@ def build_inventory_review(
             not isinstance(item, str) for item in required
         ):
             raise ValueError(f"Tool {index} has an invalid input schema shape")
+        if len(required) != len(set(required)):
+            raise ValueError(f"Tool {index} has duplicate required schema names")
         annotations = tool.get("annotations", {})
         if not isinstance(annotations, dict):
             raise ValueError(f"Tool {index} has invalid annotations")
@@ -136,6 +138,7 @@ def build_inventory_review(
                 "declaredHints": declared,
                 "schemaPropertyCount": len(properties),
                 "schemaRequiredCount": len(required),
+                "schemaRequiredWithoutLocalPropertyCount": len(set(required) - properties.keys()),
                 "proposedDisposition": proposal,
                 "verdict": "unassessed",
             }

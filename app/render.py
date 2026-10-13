@@ -36,21 +36,41 @@ def _format_metric_label(label: str) -> str:
 
 
 def _score_bars(server: dict) -> str:
+    destructive_tools = [tool for tool in server["tools"] if tool["destructive"]]
     metrics = [
-        ("Approval hygiene", max(0, min(100, server["humanApprovalRate"]))),
-        ("Schema recency", max(0, 100 - min(server["schemaReviewDays"], 100))),
-        ("Evidence retention", max(0, min(100, round(server["evidenceRetentionDays"] / 3.65)))),
-        ("Tool gating", round(mean(100 if tool["requiresApproval"] else 35 for tool in server["tools"]), 1)),
+        (
+            "Sample approval rate",
+            max(0, min(100, server["humanApprovalRate"])),
+            f'{server["humanApprovalRate"]:.0f}%',
+        ),
+        (
+            "Schema review age (45d target)",
+            min(100, 4_500 / max(45, server["schemaReviewDays"])),
+            f'{server["schemaReviewDays"]:.0f} days',
+        ),
+        (
+            "Evidence retention (90d target)",
+            max(0, min(100, server["evidenceRetentionDays"] / 90 * 100)),
+            f'{server["evidenceRetentionDays"]:.0f} days',
+        ),
     ]
+    if destructive_tools:
+        metrics.append(
+            (
+                "Destructive tools marked for approval",
+                round(100 * sum(tool["requiresApproval"] for tool in destructive_tools) / len(destructive_tools), 1),
+                f'{sum(tool["requiresApproval"] for tool in destructive_tools)} of {len(destructive_tools)}',
+            )
+        )
     rows = []
-    for label, value in metrics:
+    for label, value, display in metrics:
         tone = "good" if value >= 80 else "watch" if value >= 60 else "hot"
         rows.append(
             f"""
             <div class="meter-row">
               <div class="meter-head">
                 <span>{escape(label)}</span>
-                <span>{round(value)}%</span>
+                <span>{display}</span>
               </div>
               <div class="meter-track"><div class="meter-fill {tone}" style="width: {value:.1f}%"></div></div>
             </div>
@@ -850,52 +870,29 @@ def render_overview() -> str:
     summary = SERVICE.summary()
     catalog = SERVICE.server_catalog()
     raw_servers = _server_lookup()
-    auth_avg = round(
-        mean(
-            {
-                "api-key": 32,
-                "oidc": 86,
-                "workload-jwt": 93,
-            }[server["authModel"]]
-            for server in SERVICE.servers
-        ),
-        1,
-    )
-    network_avg = round(
-        mean(
-            {
-                "internet-reachable": 26,
-                "shared-control": 76,
-                "internal": 92,
-            }[server["networkZone"]]
-            for server in SERVICE.servers
-        ),
-        1,
-    )
+    api_key_count = sum(server["authModel"] == "api-key" for server in SERVICE.servers)
+    internet_count = sum(server["networkZone"] == "internet-reachable" for server in SERVICE.servers)
     approval_avg = round(mean(server["humanApprovalRate"] for server in SERVICE.servers), 1)
     aggregate_metrics = {
         "humanApprovalRate": approval_avg,
-        "schemaReviewDays": max(0, round(100 - summary["averageSchemaCoverage"])),
-        "evidenceRetentionDays": round(summary["averageEvidenceCoverage"] * 3.65),
-        "tools": [
-            {"requiresApproval": True},
-            {"requiresApproval": True},
-        ],
+        "schemaReviewDays": mean(server["schemaReviewDays"] for server in SERVICE.servers),
+        "evidenceRetentionDays": mean(server["evidenceRetentionDays"] for server in SERVICE.servers),
+        "tools": [tool for server in SERVICE.servers for tool in server["tools"]],
     }
     metrics_panel = f"""
       <div class="panel">
-        <h3>Average trust metrics</h3>
+        <h3>Sample control metrics</h3>
         {_score_bars(aggregate_metrics)}
         <div class="panel-grid" style="margin-top: 18px;">
           <div class="metric-card">
-            <div class="micro">Auth model average</div>
-            <div class="title">{auth_avg}% confidence lane</div>
-            <div class="desc">JWT and OIDC lanes are holding, but legacy API-key trust still drags the surface down.</div>
+            <div class="micro">Authentication inventory</div>
+            <div class="title">{api_key_count} of {summary["serverCount"]} use API keys</div>
+            <div class="desc">The fixture records auth type; it does not verify deployed caller identity or scopes.</div>
           </div>
           <div class="metric-card">
             <div class="micro">Network zoning</div>
-            <div class="title">{network_avg}% isolation quality</div>
-            <div class="desc">Internet-reachable servers remain the fastest path to containment pressure.</div>
+            <div class="title">{internet_count} of {summary["serverCount"]} internet-reachable</div>
+            <div class="desc">The fixture records network zone; it does not test deployed network isolation.</div>
           </div>
         </div>
       </div>
@@ -953,7 +950,7 @@ def render_overview() -> str:
             <div class="stat-card">
               <div class="label">Servers</div>
               <div class="value">{summary["serverCount"]}</div>
-              <div class="sub">Policy-evaluated MCP servers across internal, shared-control, and internet-facing lanes.</div>
+              <div class="sub">Synthetic MCP servers scored across modeled internal, shared-control, and internet-facing zones.</div>
             </div>
             <div class="stat-card">
               <div class="label">Review required</div>
@@ -968,7 +965,7 @@ def render_overview() -> str:
             <div class="stat-card">
               <div class="label">Average evidence</div>
               <div class="value">{summary["averageEvidenceCoverage"]}%</div>
-              <div class="sub">Evidence retention quality across the current tool surface.</div>
+              <div class="sub">Average fixture evidence score across the modeled tool set.</div>
             </div>
           </div>
           <div class="insight-grid" style="margin-top: 20px;">
@@ -1026,7 +1023,7 @@ def render_policy_queue() -> str:
         trigger_tools = [
             f'<span class="risk-badge {_risk_class(tool["riskClass"])}">{escape(tool["name"])}</span>'
             for tool in raw["tools"]
-            if tool["destructive"] or not tool["requiresApproval"]
+            if tool["destructive"] or tool["riskClass"] in {"high", "critical"}
         ]
         cards.append(
             f"""
@@ -1051,9 +1048,9 @@ def render_policy_queue() -> str:
                       <div class="desc">{escape(item["nextAction"])}</div>
                     </div>
                     <div class="metric-card" style="margin-top: 14px;">
-                      <div class="micro">Review trigger set</div>
+                      <div class="micro">High-risk or destructive tools</div>
                       <div class="pill-stack">
-                        {"".join(trigger_tools) or '<span class="risk-badge risk-low">No urgent trigger</span>'}
+                        {"".join(trigger_tools) or '<span class="risk-badge risk-low">Review server-level gap</span>'}
                       </div>
                     </div>
                   </div>
@@ -1069,7 +1066,7 @@ def render_policy_queue() -> str:
       <section class="page-section">
         <div class="section-head">
           <strong>Review queue</strong>
-          <h2>Review queue for destructive-action exposure.</h2>
+          <h2>Review queue for control and evidence gaps.</h2>
           <p>The servers most likely to need containment or human review stay at the top, with the gap and next action spelled out instead of hidden behind a score.</p>
         </div>
         <div class="section-body">

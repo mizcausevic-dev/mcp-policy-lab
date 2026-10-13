@@ -50,6 +50,7 @@ class InventoryReviewTests(unittest.TestCase):
         self.assertEqual(packet["proposedDispositionCount"], 0)
         self.assertEqual(packet["assessment"], "operator-review-required")
         self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
+        self.assertEqual(packet["tools"][0]["schemaRequiredWithoutLocalPropertyCount"], 0)
         self.assertEqual(packet["tools"][1]["declaredHints"]["destructive"], True)
         self.assertEqual(packet["declaredHintSummary"]["readOnlyTrue"], 1)
         self.assertEqual(packet["declaredHintSummary"]["destructiveTrue"], 1)
@@ -85,6 +86,7 @@ class InventoryReviewTests(unittest.TestCase):
             payload([tool("one"), tool("one")]),
             payload([tool("one", {"readOnlyHint": "true"})]),
             payload([{"name": "one", "inputSchema": {"type": "string"}}]),
+            payload([{"name": "one", "inputSchema": {"type": "object", "properties": {}, "required": ["same", "same"]}}]),
             payload([]),
             b'{"tools":[{"name":"one","inputSchema":{"type":"object"},"annotations":{"readOnlyHint":true,"readOnlyHint":false}}]}',
             b'{"tools":[{"name":"one","inputSchema":{"type":"object"},"annotations":{"readOnlyHint":NaN}}]}',
@@ -93,6 +95,17 @@ class InventoryReviewTests(unittest.TestCase):
         for raw in cases:
             with self.subTest(raw=raw[:50]), self.assertRaises(ValueError):
                 build_inventory_review(raw, "mcp-kinetic-gain", SOURCE_COMMIT)
+
+    def test_required_name_without_local_property_is_visible_not_validation(self) -> None:
+        packet = build_inventory_review(
+            payload([{"name": "one", "inputSchema": {"type": "object", "properties": {}, "required": ["external"]}}]),
+            "mcp-kinetic-gain",
+            SOURCE_COMMIT,
+        )
+        self.assertEqual(packet["tools"][0]["schemaPropertyCount"], 0)
+        self.assertEqual(packet["tools"][0]["schemaRequiredCount"], 1)
+        self.assertEqual(packet["tools"][0]["schemaRequiredWithoutLocalPropertyCount"], 1)
+        self.assertEqual(packet["tools"][0]["verdict"], "unassessed")
 
     def test_unknown_proposed_disposition_is_rejected(self) -> None:
         for proposals in ({"other": "read-only"}, {"one": ["read-only"]}):
