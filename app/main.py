@@ -16,8 +16,8 @@ app = FastAPI(
     title="MCP Policy Lab",
     version="0.1.0",
     description=(
-        "Policy evaluation and review lab for MCP servers and tools, focused on "
-        "destructive-action controls, schema posture, and operator-facing trust decisions."
+        "Synthetic sample-data policy review lab for MCP servers and tools. "
+        "It does not connect to live servers or enforce tool permissions."
     ),
 )
 
